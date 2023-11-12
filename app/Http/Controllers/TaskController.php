@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Resources\TaskResource;
+use App\Http\Responses\ApiErrorResponse;
 use App\Http\Responses\ApiSuccessResponse;
 use App\Models\Task;
 use App\Services\TaskService;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class TaskController extends Controller
 {
@@ -41,7 +43,22 @@ class TaskController extends Controller
      */
     public function store(StoreTaskRequest $request)
     {
+        $task = $request->validated();
         
+
+        if ($request->hasFile('image')) {
+            $path = $this->taskService->uploadImage($request);
+
+            if ($path === false) {
+                return new ApiErrorResponse('Failed to upload image', [], Response::HTTP_BAD_REQUEST);
+            }
+
+            $task['image'] = $path;
+        }   
+
+        $task = Task::create($task);
+
+        return new ApiSuccessResponse('Task successfully created.', ['record' => new TaskResource($task)], Response::HTTP_CREATED);
     }
 
     /**
