@@ -1,4 +1,4 @@
-# Laravel Task Management API
+# Todo API
 
 A RESTful API for managing tasks built with Laravel.
 
@@ -6,7 +6,7 @@ A RESTful API for managing tasks built with Laravel.
 
 ## Introduction
 
-The Laravel Task Management API is designed to facilitate the management of tasks with features like creating, updating, and filtering tasks. It includes image upload functionality and consistent API responses.
+The Todo API is designed to facilitate the management of tasks with features like creating, updating, and filtering tasks. It includes image upload functionality and consistent API responses.
 
 ## Features
 
@@ -30,10 +30,10 @@ Make sure you have the following installed:
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/laravel-task-management.git
+git clone https://github.com/atikhassandev/todo-api.git
 
 # Navigate to the project directory
-cd laravel-task-management
+cd todo-api
 
 # Install dependencies
 composer install
