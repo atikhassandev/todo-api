@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\TaskStatus;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Http\Resources\TaskResource;
@@ -11,6 +12,7 @@ use App\Models\Task;
 use App\Services\TaskService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Validation\Rule;
 
 class TaskController extends Controller
 {
@@ -135,6 +137,16 @@ class TaskController extends Controller
      */
     public function updateStatus(Request $request, $id)
     {
-        //
+        $task = Task::findOrFail($id);
+        
+        
+        $status = $request->validate([
+            'status' => ['required', Rule::enum(TaskStatus::class)],
+        ]);
+
+        $task->update($status);
+
+        return new ApiSuccessResponse('Successfully updated task status');
+
     }
 }
