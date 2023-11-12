@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
  */
 
-Route::prefix('v1', function () {
+Route::prefix('v1')->group(function () {
     Route::apiResource('tasks', TaskController::class);
     Route::get('/tasks/status/{status}', [TaskController::class, 'filterByStatus']);
     Route::patch('/tasks/{id}/status', [TaskController::class, 'updateStatus']);
