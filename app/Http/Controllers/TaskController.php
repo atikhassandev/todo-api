@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\TaskResource;
+use App\Http\Responses\ApiSuccessResponse;
+use App\Models\Task;
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
@@ -11,7 +14,16 @@ class TaskController extends Controller
      */
     public function index()
     {
-        //
+        $tasks = Task::paginate(10);
+
+        $responseData = [
+            'totalRecords' => $tasks->total(),
+            'limit' => $tasks->perPage(),
+            'page' => $tasks->currentPage(),
+            'records' => TaskResource::collection($tasks->items()),
+        ];
+
+        return new ApiSuccessResponse('Retrieve records successfully', $responseData);
     }
 
     /**
