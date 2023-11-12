@@ -14,4 +14,6 @@ class Task extends Model
         'status' => TaskStatus::class,
     ];
 
+    protected $fillable = ['title', 'status', 'image'];
+
 }
