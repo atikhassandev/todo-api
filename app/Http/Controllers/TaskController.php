@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTaskRequest;
+use App\Http\Requests\UpdateTaskRequest;
 use App\Http\Resources\TaskResource;
 use App\Http\Responses\ApiErrorResponse;
 use App\Http\Responses\ApiSuccessResponse;
@@ -19,7 +20,6 @@ class TaskController extends Controller
     {
         $this->taskService = $taskService;
     }
-
 
     /**
      * Display a listing of the resource.
@@ -44,7 +44,6 @@ class TaskController extends Controller
     public function store(StoreTaskRequest $request)
     {
         $task = $request->validated();
-        
 
         if ($request->hasFile('image')) {
             $path = $this->taskService->uploadImage($request);
@@ -54,7 +53,7 @@ class TaskController extends Controller
             }
 
             $task['image'] = $path;
-        }   
+        }
 
         $task = Task::create($task);
 
@@ -72,9 +71,30 @@ class TaskController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateTaskRequest $request, Task $task)
     {
-        //
+
+        $data = $request->validated();
+
+        if ($request->hasFile('image')) {
+
+            if ($task->image) {
+                $this->taskService->deleteUploadedImage($task->image);
+            }
+
+            $path = $this->taskService->uploadImage($request);
+
+            if ($path === false) {
+                return new ApiErrorResponse('Failed to upload image.', [], Response::HTTP_BAD_REQUEST);
+            }
+
+            $data['image'] = $path;
+        }
+
+        $task->update($data);
+
+        return new ApiSuccessResponse('Task successfully updated.');
+
     }
 
     /**
