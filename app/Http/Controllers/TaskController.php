@@ -116,7 +116,18 @@ class TaskController extends Controller
      */
     public function filterByStatus($taskStatus)
     {
-        //
+     
+        $tasks = Task::where('status', $taskStatus)->paginate(10);
+
+        $responseData = [
+            'totalRecords' => $tasks->total(),
+            'limit' => $tasks->perPage(),
+            'page' => $tasks->currentPage(),
+            'records' => TaskResource::collection($tasks->items()),
+        ];
+
+        return new ApiSuccessResponse('Filtering of records completed successfully', $responseData);
+        
     }
 
     /**
