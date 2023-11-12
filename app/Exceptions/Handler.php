@@ -2,7 +2,12 @@
 
 namespace App\Exceptions;
 
+use App\Http\Responses\ApiErrorResponse;
+use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\ValidationException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -27,4 +32,18 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
+    public function render($request, Exception | Throwable $e)
+    {
+        if ($e instanceof ModelNotFoundException) {
+            return new ApiErrorResponse('Record not found.', [], JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        if ($e instanceof ValidationException) {
+            return new ApiErrorResponse('Invalid input data.', $e->errors(), $e->status);
+        }
+
+        return parent::render($request, $e);
+    }
+
 }
