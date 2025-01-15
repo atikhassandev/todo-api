@@ -73,3 +73,6 @@ Feel free to contribute to the development of this project.
 
 ### License
 This project is open-source and available under the MIT License.
+
+
+**Feel free to contact us**
